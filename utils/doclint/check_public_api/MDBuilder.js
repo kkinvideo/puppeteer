@@ -53,14 +53,14 @@ class MDOutline {
           currentClass.members.push(member);
         } else if (element.matches('li') && element.firstChild.matches && element.firstChild.matches('code')) {
           member.args.push(element.firstChild.textContent);
-        } else if (element.matches('li') && element.firstChild.nodeType === Element.TEXT_NODE && element.firstChild.textContent.toLowerCase().startsWith('retur')) {
+        } else if (element.matches('li') && element.firstChild.nodeType === Element.TEXT_NODE && element.firstChild.textContent.toLowerCase().startsWith('return')) {
           member.hasReturn = true;
           const expectedText = 'returns: ';
           let actualText = element.firstChild.textContent;
           let angleIndex = actualText.indexOf('<');
           let spaceIndex = actualText.indexOf(' ');
-          angleIndex = angleIndex === -1 ? angleText.length : angleIndex;
-          spaceIndex = spaceIndex === -1 ? spaceIndex.length : spaceIndex + 1;
+          angleIndex = angleIndex === -1 ? actualText.length : angleIndex;
+          spaceIndex = spaceIndex === -1 ? actualText.length : spaceIndex + 1;
           actualText = actualText.substring(0, Math.min(angleIndex, spaceIndex));
           if (actualText !== expectedText)
             errors.push(`${member.name} has mistyped 'return' type declaration: expected exactly '${expectedText}', found '${actualText}'.`);

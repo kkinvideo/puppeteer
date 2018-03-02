@@ -20,36 +20,26 @@ const Documentation = require('./Documentation');
 const Message = require('../Message');
 
 const EXCLUDE_CLASSES = new Set([
+  'CSSCoverage',
   'Connection',
   'EmulationManager',
   'FrameManager',
+  'JSCoverage',
   'Helper',
   'Launcher',
   'Multimap',
   'NavigatorWatcher',
   'NetworkManager',
-  'ProxyStream',
-  'Session',
+  'Pipe',
   'TaskQueue',
   'WaitTask',
 ]);
 
 const EXCLUDE_METHODS = new Set([
-  'Body.constructor',
-  'Browser.constructor',
-  'Dialog.constructor',
-  'ElementHandle.constructor',
-  'Frame.constructor',
-  'Headers.constructor',
+  'Browser.create',
   'Headers.fromPayload',
-  'Keyboard.constructor',
-  'Mouse.constructor',
-  'Touchscreen.constructor',
-  'Tracing.constructor',
-  'Page.constructor',
   'Page.create',
-  'Request.constructor',
-  'Response.constructor',
+  'JSHandle.toString',
 ]);
 
 /**
@@ -143,6 +133,9 @@ function filterJSDocumentation(jsDocumentation) {
       continue;
     const members = cls.membersArray.filter(member => {
       if (member.name.startsWith('_'))
+        return false;
+      // Exclude all constructors by default.
+      if (member.name === 'constructor' && member.type === 'method')
         return false;
       return !EXCLUDE_METHODS.has(`${cls.name}.${member.name}`);
     });
